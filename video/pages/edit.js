@@ -188,6 +188,7 @@ function renderClipList(){
       c.start = Math.max(0, c.start - eps);
       c.end = Math.max(c.start + 0.01, c.end - eps);
       renderClipList();
+       scheduleSave();
     });
 
     const down = document.createElement("button");
@@ -200,6 +201,7 @@ function renderClipList(){
       c.start = Math.min(duration, c.start + eps);
       c.end = Math.min(duration, Math.max(c.start + 0.01, c.end + eps));
       renderClipList();
+      scheduleSave();
     });
 
     const del = document.createElement("button");
@@ -209,6 +211,7 @@ function renderClipList(){
     del.addEventListener("click", () => {
       clips = clips.filter(x => x.id !== c.id);
       renderClipList();
+       scheduleSave();
     });
 
     btns.appendChild(up);
@@ -367,6 +370,7 @@ function renderSubtitleList(){
       subtitles = subtitles.filter(x => x.id !== s.id);
       if (selectedSubId === s.id) clearSubtitleForm();
       renderSubtitleList();
+      scheduleSave();
     });
 
     btns.appendChild(del);
@@ -666,20 +670,45 @@ resetFx.addEventListener("click", () => {
   sat.value = "100";
   blur.value = "0";
 });
+// 필터 슬라이더 저장
+bright.addEventListener("input", scheduleSave);
+contrast.addEventListener("input", scheduleSave);
+sat.addEventListener("input", scheduleSave);
+blur.addEventListener("input", scheduleSave);
+
+// resetFx도 저장 포함
+resetFx.addEventListener("click", () => {
+  bright.value = "100";
+  contrast.value = "100";
+  sat.value = "100";
+  blur.value = "0";
+  scheduleSave();
+});
+
+// 워터마크 저장
+text.addEventListener("input", scheduleSave);
+textSize.addEventListener("input", scheduleSave);
+textColor.addEventListener("input", scheduleSave);
+textX.addEventListener("input", scheduleSave);
+textY.addEventListener("input", scheduleSave);
+
 
 /* =========================
    ✅ 클립 이벤트
 ========================= */
-clipAdd.addEventListener("click", addClipFromInOut);
+clipAdd.addEventListener("click", () => {
+  addClipFromInOut();
+  scheduleSave();
+});
 
 clipClearAll.addEventListener("click", () => {
   clips = [];
   renderClipList();
+  scheduleSave();
 });
 
 clipsOn.addEventListener("change", () => {
-  // 켜면 루프의 의미가 "클립 전체 반복"으로도 자연스럽게 사용됨
-  // 특별한 동작은 필요 없고, tick에서 분기됨
+  scheduleSave();
 });
 
 /* =========================
@@ -693,10 +722,26 @@ subSetEnd.addEventListener("click", () => {
   const t = clamp(video.currentTime || 0, 0, duration || 999999);
   subEnd.value = t.toFixed(2);
 });
-subAdd.addEventListener("click", addSubtitle);
-subUpdate.addEventListener("click", updateSubtitle);
-subClear.addEventListener("click", clearSubtitleForm);
-subsOn.addEventListener("change", () => drawFrame());
+subAdd.addEventListener("click", () => {
+  addSubtitle();
+  scheduleSave();
+});
+
+subUpdate.addEventListener("click", () => {
+  updateSubtitle();
+  scheduleSave();
+});
+
+subClear.addEventListener("click", () => {
+  clearSubtitleForm();
+  scheduleSave(); // 원치 않으면 빼도 됨
+});
+
+subsOn.addEventListener("change", () => {
+  drawFrame();
+  scheduleSave();
+});
+
 
 /* =========================
    ✅ 내보내기: In/Out OR 클립 이어붙이기
