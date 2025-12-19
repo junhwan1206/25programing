@@ -6,7 +6,6 @@
     <title>영상 편집하기</title>
     <link rel="stylesheet" href="../style.css" />
     <style>
-      /* edit 전용 UI */
       .editor {
         width: min(1100px, 100%);
         margin: 0 auto;
@@ -22,105 +21,142 @@
         box-shadow: 0 16px 36px rgba(16,24,40,0.08);
         padding: 16px;
       }
-      .previewWrap {
-        display: grid;
-        gap: 10px;
-      }
-      .previewTop {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-      }
-      .h2 {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 900;
-        letter-spacing: -0.3px;
-      }
-      .muted { opacity: 0.7; font-size: 12px; }
-      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .previewWrap { display: grid; gap: 10px; }
+      .previewTop { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .h2 { margin:0; font-size:16px; font-weight:900; letter-spacing:-0.3px; }
+      .muted { opacity:.7; font-size:12px; }
+      .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
       .row > * { flex: 1 1 auto; }
 
-      .btn2 {
-        appearance: none;
-        border: 1px solid rgba(16,24,40,0.12);
-        background: #fff;
-        color: #101828;
-        border-radius: 14px;
-        padding: 10px 12px;
-        font-weight: 900;
-        cursor: pointer;
-        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+      .btn2{
+        appearance:none;
+        border:1px solid rgba(16,24,40,0.12);
+        background:#fff;
+        color:#101828;
+        border-radius:14px;
+        padding:10px 12px;
+        font-weight:900;
+        cursor:pointer;
+        transition: transform 160ms ease, box-shadow 160ms ease;
       }
-      .btn2:hover { transform: translateY(-2px); box-shadow: 0 12px 22px rgba(16,24,40,0.08); }
-      .btn2.primary { background:#101828; color:#fff; border-color:#101828; }
-      .btn2:disabled { opacity: 0.5; cursor: not-allowed; transform:none; box-shadow:none; }
+      .btn2:hover{ transform: translateY(-2px); box-shadow:0 12px 22px rgba(16,24,40,0.08); }
+      .btn2.primary{ background:#101828; color:#fff; border-color:#101828; }
+      .btn2:disabled{ opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
 
-      .canvas {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border-radius: 18px;
-        background: #0b0f19;
-        display: block;
-        border: 1px solid rgba(16,24,40,0.10);
-      }
-
-      .slider {
-        width: 100%;
+      .canvas{
+        width:100%;
+        aspect-ratio: 16/9;
+        border-radius:18px;
+        background:#0b0f19;
+        display:block;
+        border:1px solid rgba(16,24,40,0.10);
       }
 
-      .grid2 {
-        display: grid;
+      .slider{ width:100%; }
+
+      .grid2{
+        display:grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap:10px;
       }
 
-      .field {
-        display: grid;
-        gap: 6px;
+      .field{ display:grid; gap:6px; }
+      .label{ font-size:12px; font-weight:900; opacity:.75; }
+
+      .input{
+        width:100%;
+        padding:10px 12px;
+        border-radius:14px;
+        border:1px solid rgba(16,24,40,0.12);
+        background:#fff;
+        outline:none;
       }
-      .label {
-        font-size: 12px;
-        font-weight: 900;
-        opacity: 0.75;
-      }
-      .input, .select {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 14px;
-        border: 1px solid rgba(16,24,40,0.12);
-        background: #fff;
-        outline: none;
-      }
-      .input:focus, .select:focus {
+      .input:focus{
         border-color: rgba(99,102,241,0.45);
         box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
       }
 
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(16,24,40,0.10);
+      .pill{
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding:8px 10px;
+        border-radius:999px;
+        border:1px solid rgba(16,24,40,0.10);
         background: rgba(255,255,255,0.8);
+        font-size:12px;
+        font-weight:900;
+      }
+
+      .download{
+        display:none;
+        margin-top:10px;
+        padding:12px;
+        border-radius:16px;
+        border:1px solid rgba(34,197,94,0.25);
+        background: rgba(34,197,94,0.10);
+        font-weight:900;
+      }
+
+      /* 리스트 UI 공용 */
+      .listBox{
+        display: grid;
+        gap: 8px;
+        margin-top: 6px;
+        padding: 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(16,24,40,0.10);
+        background: rgba(255,255,255,0.65);
+        max-height: 210px;
+        overflow: auto;
+      }
+      .item{
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(16,24,40,0.10);
+        background: #fff;
+      }
+      .itemMain{
+        display: grid;
+        gap: 4px;
+        cursor: pointer;
+      }
+      .itemTime{
         font-size: 12px;
         font-weight: 900;
+        opacity: 0.75;
       }
-
-      .download {
-        display: none;
-        margin-top: 10px;
-        padding: 12px;
-        border-radius: 16px;
-        border: 1px solid rgba(34,197,94,0.25);
-        background: rgba(34,197,94,0.10);
+      .itemText{
+        font-size: 13px;
         font-weight: 900;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .itemBtns{
+        display:flex;
+        gap:8px;
+        align-items:center;
+      }
+      .miniBtn{
+        border: 1px solid rgba(16,24,40,0.12);
+        background:#fff;
+        border-radius: 12px;
+        padding: 8px 10px;
+        font-weight: 900;
+        cursor:pointer;
+      }
+      .miniBtn.danger{
+        border-color: rgba(239,68,68,0.30);
+        background: rgba(239,68,68,0.08);
       }
 
-      @media (max-width: 900px) {
+      @media (max-width: 900px){
         .editor { grid-template-columns: 1fr; }
       }
     </style>
@@ -164,9 +200,7 @@
           <div class="field">
             <div class="label">탐색</div>
             <input id="seek" class="slider" type="range" min="0" max="1000" value="0" disabled />
-            <div class="muted">
-              팁) 재생 중에도 슬라이더로 위치 이동 가능 / 인·아웃 구간을 잡아 “구간 반복” 가능
-            </div>
+            <div class="muted">In/Out은 “한 구간”, 클립 모드는 “여러 구간 이어붙이기”</div>
           </div>
 
           <div class="grid2">
@@ -185,7 +219,7 @@
           <div class="row">
             <label class="pill" style="cursor:pointer;">
               <input id="loop" type="checkbox" />
-              구간 반복
+              반복
             </label>
 
             <label class="pill" style="cursor:pointer;">
@@ -196,19 +230,39 @@
           </div>
 
           <div class="row">
-            <button id="export" class="btn2 primary" type="button" disabled>선택 구간 내보내기(WebM)</button>
+            <button id="export" class="btn2 primary" type="button" disabled>내보내기(WebM)</button>
             <a id="download" class="download" href="#" download="export.webm">내보낸 파일 다운로드</a>
           </div>
 
-          <div class="muted">
-            ※ 내보내기는 브라우저에서 “화면 캡처 방식”으로 저장돼서, 길거나 고화질 영상은 시간이 걸릴 수 있어요.
-          </div>
+          <div class="muted">※ 내보내기: In/Out 또는 “클립 리스트” 기준으로 저장됨</div>
         </section>
 
         <!-- 오른쪽: 편집 옵션 -->
         <aside class="panelBox">
           <h2 class="h2" style="margin-bottom:10px;">편집 옵션</h2>
 
+          <!-- ✅ 클립(여러 구간) -->
+          <div class="field">
+            <div class="label">클립(여러 구간 잘라서 합치기)</div>
+
+            <label class="pill" style="cursor:pointer; width:fit-content;">
+              <input id="clipsOn" type="checkbox" />
+              클립 모드 사용 (내보내기/재생에 적용)
+            </label>
+
+            <div class="row">
+              <button id="clipAdd" class="btn2 primary" type="button" disabled>In~Out을 클립으로 추가</button>
+              <button id="clipClearAll" class="btn2" type="button" disabled>클립 전체 삭제</button>
+            </div>
+
+            <div class="muted">여러 클립을 추가하면, 필요 없는 중간 부분은 자연스럽게 빠져.</div>
+
+            <div id="clipList" class="listBox" aria-label="클립 목록"></div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid rgba(16,24,40,0.08); margin:14px 0;" />
+
+          <!-- 필터 -->
           <div class="field">
             <div class="label">필터</div>
             <div class="grid2">
@@ -237,6 +291,7 @@
 
           <hr style="border:none;border-top:1px solid rgba(16,24,40,0.08); margin:14px 0;" />
 
+          <!-- 텍스트 오버레이(워터마크) -->
           <div class="field">
             <div class="label">텍스트 오버레이(워터마크)</div>
 
@@ -267,366 +322,63 @@
               </label>
             </div>
 
-            <div class="muted">X/Y는 화면 비율 좌표예요. (0.05, 0.92)면 왼쪽 아래 느낌!</div>
+            <div class="muted">X/Y는 화면 비율 좌표예요.</div>
+          </div>
+
+          <hr style="border:none;border-top:1px solid rgba(16,24,40,0.08); margin:14px 0;" />
+
+          <!-- ✅ 자막 트랙 -->
+          <div class="field">
+            <div class="label">자막 트랙(구간별)</div>
+
+            <label class="pill" style="cursor:pointer; width:fit-content;">
+              <input id="subsOn" type="checkbox" checked />
+              자막 표시
+            </label>
+
+            <label class="field">
+              <span class="label">자막 내용</span>
+              <input id="subTextInput" class="input" type="text" placeholder="예: 안녕하세요! 오늘은..." disabled />
+            </label>
+
+            <div class="grid2">
+              <div class="field">
+                <span class="label">시작(초)</span>
+                <input id="subStart" class="input" type="number" step="0.01" value="0" disabled />
+                <button id="subSetStart" class="btn2" type="button" disabled>현재를 시작으로</button>
+              </div>
+              <div class="field">
+                <span class="label">끝(초)</span>
+                <input id="subEnd" class="input" type="number" step="0.01" value="2" disabled />
+                <button id="subSetEnd" class="btn2" type="button" disabled>현재를 끝으로</button>
+              </div>
+            </div>
+
+            <div class="grid2">
+              <label class="field">
+                <span class="label">크기</span>
+                <input id="subSize" class="input" type="number" min="14" max="120" value="44" disabled />
+              </label>
+              <label class="field">
+                <span class="label">색상</span>
+                <input id="subColor" class="input" type="color" value="#ffffff" disabled />
+              </label>
+            </div>
+
+            <div class="row">
+              <button id="subAdd" class="btn2 primary" type="button" disabled>자막 추가</button>
+              <button id="subUpdate" class="btn2" type="button" disabled>선택 자막 수정</button>
+              <button id="subClear" class="btn2" type="button" disabled>입력 초기화</button>
+            </div>
+
+            <div class="muted">리스트에서 자막 클릭 → 수정 가능</div>
+            <div id="subList" class="listBox" aria-label="자막 목록"></div>
           </div>
         </aside>
       </div>
     </main>
 
-    <!-- 실제 비디오(숨김): 캔버스에 그려서 편집 느낌을 만듦 -->
     <video id="video" playsinline style="display:none;"></video>
-
-    <script>
-      const $ = (id) => document.getElementById(id);
-
-      const file = $("file");
-      const video = $("video");
-      const canvas = $("canvas");
-      const ctx = canvas.getContext("2d");
-
-      const playBtn = $("play");
-      const pauseBtn = $("pause");
-      const seek = $("seek");
-      const timeInfo = $("timeInfo");
-
-      const inTimeEl = $("inTime");
-      const outTimeEl = $("outTime");
-      const setInBtn = $("setIn");
-      const setOutBtn = $("setOut");
-      const loopEl = $("loop");
-
-      const speed = $("speed");
-      const speedText = $("speedText");
-
-      const bright = $("bright");
-      const contrast = $("contrast");
-      const sat = $("sat");
-      const blur = $("blur");
-      const resetFx = $("resetFx");
-
-      const text = $("text");
-      const textSize = $("textSize");
-      const textColor = $("textColor");
-      const textX = $("textX");
-      const textY = $("textY");
-
-      const exportBtn = $("export");
-      const download = $("download");
-
-      let rafId = null;
-      let duration = 0;
-
-      function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-
-      function fmt(t){
-        t = Math.max(0, t || 0);
-        const mm = String(Math.floor(t / 60)).padStart(2, "0");
-        const ss = String(Math.floor(t % 60)).padStart(2, "0");
-        return `${mm}:${ss}`;
-      }
-
-      function enableUI(on){
-        [
-          playBtn, pauseBtn, seek, inTimeEl, outTimeEl, setInBtn, setOutBtn,
-          speed, bright, contrast, sat, blur, resetFx,
-          text, textSize, textColor, textX, textY, exportBtn
-        ].forEach(el => el.disabled = !on);
-      }
-
-      function resizeCanvas(){
-        const rect = canvas.getBoundingClientRect();
-        const dpr = Math.max(1, window.devicePixelRatio || 1);
-        canvas.width = Math.floor(rect.width * dpr);
-        canvas.height = Math.floor(rect.height * dpr);
-      }
-
-      function currentInOut(){
-        const inT = clamp(parseFloat(inTimeEl.value || "0"), 0, duration);
-        const outT = clamp(parseFloat(outTimeEl.value || String(duration)), 0, duration);
-        return { inT: Math.min(inT, outT), outT: Math.max(inT, outT) };
-      }
-
-      function applyFilters(){
-        const b = bright.value;
-        const c = contrast.value;
-        const s = sat.value;
-        const bl = blur.value;
-        ctx.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) blur(${bl}px)`;
-      }
-
-      function drawFrame(){
-        if (!duration) return;
-
-        resizeCanvas();
-        ctx.save();
-        applyFilters();
-
-        // 비디오를 캔버스에 꽉 채우기(크롭 없이 contain 느낌으로)
-        const cw = canvas.width, ch = canvas.height;
-        const vw = video.videoWidth || 16, vh = video.videoHeight || 9;
-        const scale = Math.min(cw / vw, ch / vh);
-        const w = vw * scale;
-        const h = vh * scale;
-        const x = (cw - w) / 2;
-        const y = (ch - h) / 2;
-
-        ctx.clearRect(0, 0, cw, ch);
-        ctx.fillStyle = "#0b0f19";
-        ctx.fillRect(0, 0, cw, ch);
-        ctx.drawImage(video, x, y, w, h);
-
-        // 텍스트 오버레이
-        const txt = (text.value || "").trim();
-        if (txt){
-          ctx.filter = "none"; // 텍스트는 선명하게
-          const size = clamp(parseFloat(textSize.value || "42"), 10, 200);
-          const px = clamp(parseFloat(textX.value || "0.05"), 0, 1);
-          const py = clamp(parseFloat(textY.value || "0.92"), 0, 1);
-
-          ctx.font = `900 ${Math.floor(size * (canvas.width / (rectWidth()* (window.devicePixelRatio||1))))}px system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif`;
-          // 위 줄은 브라우저마다 차이가 있어서 안전하게 아래로 다시 세팅
-          const fontPx = Math.floor(size * (canvas.width / (rectWidth() * (window.devicePixelRatio||1))));
-          ctx.font = `900 ${Math.max(14, fontPx)}px system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif`;
-
-          ctx.textBaseline = "middle";
-          ctx.textAlign = "left";
-
-          const tx = x + w * px;
-          const ty = y + h * py;
-
-          // 그림자+외곽선
-          ctx.shadowColor = "rgba(0,0,0,0.45)";
-          ctx.shadowBlur = 10;
-          ctx.lineWidth = 6;
-          ctx.strokeStyle = "rgba(0,0,0,0.55)";
-          ctx.strokeText(txt, tx, ty);
-
-          ctx.shadowBlur = 0;
-          ctx.fillStyle = textColor.value || "#ffffff";
-          ctx.fillText(txt, tx, ty);
-        }
-
-        ctx.restore();
-      }
-
-      function rectWidth(){
-        return canvas.getBoundingClientRect().width || 1;
-      }
-
-      function tick(){
-        // UI 업데이트
-        if (duration){
-          const v = video.currentTime || 0;
-          timeInfo.textContent = `${fmt(v)} / ${fmt(duration)}`;
-
-          const pos = (v / duration) * 1000;
-          if (!seek.matches(":active")) seek.value = String(clamp(pos, 0, 1000));
-
-          const { inT, outT } = currentInOut();
-          if (loopEl.checked && v >= outT){
-            video.currentTime = inT;
-          }
-        }
-
-        drawFrame();
-        rafId = requestAnimationFrame(tick);
-      }
-
-      function stopLoop(){
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-
-      file.addEventListener("change", () => {
-        const f = file.files?.[0];
-        if (!f) return;
-
-        download.style.display = "none";
-        download.href = "#";
-
-        const url = URL.createObjectURL(f);
-        video.src = url;
-
-        video.onloadedmetadata = () => {
-          duration = video.duration || 0;
-          inTimeEl.value = "0";
-          outTimeEl.value = String(duration.toFixed(2));
-          enableUI(true);
-
-          // 시작 프레임 그리기
-          video.currentTime = 0;
-          stopLoop();
-          tick();
-        };
-      });
-
-      playBtn.addEventListener("click", async () => {
-        if (!duration) return;
-        const { inT, outT } = currentInOut();
-
-        // 현재가 구간 밖이면 In으로
-        if (video.currentTime < inT || video.currentTime > outT){
-          video.currentTime = inT;
-          await new Promise(r => video.addEventListener("seeked", r, { once: true }));
-        }
-
-        video.playbackRate = parseFloat(speed.value || "1");
-        await video.play();
-      });
-
-      pauseBtn.addEventListener("click", () => {
-        video.pause();
-      });
-
-      seek.addEventListener("input", async () => {
-        if (!duration) return;
-        const p = parseFloat(seek.value || "0") / 1000;
-        video.currentTime = clamp(p * duration, 0, duration);
-      });
-
-      setInBtn.addEventListener("click", () => {
-        const t = clamp(video.currentTime || 0, 0, duration);
-        const outT = clamp(parseFloat(outTimeEl.value || String(duration)), 0, duration);
-        inTimeEl.value = String(Math.min(t, outT).toFixed(2));
-      });
-
-      setOutBtn.addEventListener("click", () => {
-        const t = clamp(video.currentTime || 0, 0, duration);
-        const inT = clamp(parseFloat(inTimeEl.value || "0"), 0, duration);
-        outTimeEl.value = String(Math.max(t, inT).toFixed(2));
-      });
-
-      speed.addEventListener("input", () => {
-        const v = parseFloat(speed.value || "1");
-        speedText.textContent = `${v.toFixed(2)}x`;
-        video.playbackRate = v;
-      });
-
-      resetFx.addEventListener("click", () => {
-        bright.value = "100";
-        contrast.value = "100";
-        sat.value = "100";
-        blur.value = "0";
-      });
-
-      // 내보내기(WebM) - 캔버스 캡처 + 오디오 트랙 합치기
-      exportBtn.addEventListener("click", async () => {
-        if (!duration) return;
-
-        download.style.display = "none";
-        download.href = "#";
-
-        exportBtn.disabled = true;
-        playBtn.disabled = true;
-
-        const { inT, outT } = currentInOut();
-        if (outT <= inT + 0.01){
-          alert("Out이 In보다 커야 해요!");
-          exportBtn.disabled = false;
-          playBtn.disabled = false;
-          return;
-        }
-
-        // 안전하게 30fps 캔버스 스트림
-        resizeCanvas();
-        const canvasStream = canvas.captureStream(30);
-
-        // 오디오 트랙: video.captureStream()에서 가져오기 (브라우저에 따라 play 후 생길 수 있음)
-        let audioTrack = null;
-
-        // In으로 이동
-        video.pause();
-        video.playbackRate = 1;
-        video.currentTime = inT;
-        await new Promise(r => video.addEventListener("seeked", r, { once: true }));
-
-        // 한번 재생을 시작해야 audio track이 잡히는 경우가 많음
-        await video.play();
-        const vStream = video.captureStream?.();
-        video.pause();
-
-        if (vStream){
-          const aTracks = vStream.getAudioTracks();
-          if (aTracks && aTracks.length > 0) audioTrack = aTracks[0];
-        }
-
-        const mixed = new MediaStream();
-        const vTrack = canvasStream.getVideoTracks()[0];
-        mixed.addTrack(vTrack);
-        if (audioTrack) mixed.addTrack(audioTrack);
-
-        // MediaRecorder mimeType 선택
-        const candidates = [
-          "video/webm;codecs=vp9,opus",
-          "video/webm;codecs=vp8,opus",
-          "video/webm"
-        ];
-        let mimeType = "";
-        for (const c of candidates){
-          if (MediaRecorder.isTypeSupported(c)) { mimeType = c; break; }
-        }
-
-        let rec;
-        try{
-          rec = new MediaRecorder(mixed, mimeType ? { mimeType } : undefined);
-        }catch(e){
-          alert("이 브라우저는 내보내기를 지원하지 않는 것 같아요(또는 코덱 문제). 크롬 기반 브라우저에서 시도해줘!");
-          exportBtn.disabled = false;
-          playBtn.disabled = false;
-          return;
-        }
-
-        const chunks = [];
-        rec.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
-
-        // 녹화 중에는 프레임 계속 그려주기
-        let exporting = true;
-        function drawDuringExport(){
-          if (!exporting) return;
-          drawFrame();
-          requestAnimationFrame(drawDuringExport);
-        }
-
-        // 다시 In으로 이동 후 재생하며 Out에서 중지
-        video.currentTime = inT;
-        await new Promise(r => video.addEventListener("seeked", r, { once: true }));
-
-        exporting = true;
-        rec.start(200);
-        drawDuringExport();
-
-        await video.play();
-
-        await new Promise((resolve) => {
-          const checker = () => {
-            if ((video.currentTime || 0) >= outT){
-              resolve();
-              return;
-            }
-            requestAnimationFrame(checker);
-          };
-          checker();
-        });
-
-        video.pause();
-        exporting = false;
-        rec.stop();
-
-        await new Promise((resolve) => rec.onstop = resolve);
-
-        const blob = new Blob(chunks, { type: rec.mimeType || "video/webm" });
-        const url = URL.createObjectURL(blob);
-
-        download.href = url;
-        download.download = `export_${Math.floor(inT)}-${Math.floor(outT)}.webm`;
-        download.style.display = "block";
-
-        exportBtn.disabled = false;
-        playBtn.disabled = false;
-      });
-
-      // 지속적인 렌더 루프(미리보기)
-      window.addEventListener("resize", () => drawFrame());
-    </script>
+    <script src="./edit.js"></script>
   </body>
 </html>
